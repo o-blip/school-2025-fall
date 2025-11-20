@@ -1,4 +1,4 @@
-function [C_s_in, string_group] = string_connectivity(p)
+function C_s_in = string_connectivity(p)
 %% function to get the string connectivity of the unit
 % may want to group these strings later
 C_s_in = [];
@@ -44,6 +44,5 @@ for i = p+1:2*p
     end
     C_inner2inner = [C_inner2inner; c_s_b2b_a;c_s_b2b_b];
 end
-string_group = {C_outer_bottom,C_outer_top,C_inner2outer,C_bottom2top,C_inner2inner};
 C_s_in = [C_outer_bottom;C_outer_top;C_inner2outer;C_bottom2top;C_inner2inner];
 end

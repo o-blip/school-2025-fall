@@ -1,4 +1,4 @@
-function [C_b_in, groups] = bar_connectivity(p)
+function C_b_in = bar_connectivity(p)
 %% function to get the bar connectivity of the unit
 % Also returns the bar groups: inner polygons and outer bars
 
@@ -26,5 +26,4 @@ for i = 1:p
     bot_i_2_top_o = [bot_i_2_top_o; c_bi2to_in];
 end
 C_b_in = [bot_inner; top_inner; bot_o_2_top_i;bot_i_2_top_o];
-groups = {bot_inner, top_inner, bot_o_2_top_i, bot_i_2_top_o};
 end

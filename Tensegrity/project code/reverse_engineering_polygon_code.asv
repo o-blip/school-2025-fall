@@ -30,7 +30,7 @@ index_pinned_unit = find(N_unit(3,:) == 0); % finding pinned nodes (fixed to gro
 
 %% Creating a base of repeated units
 dis_unit = [2*r 2*r 2*h-h_ratio*h]';  % unit off distance
-qz = 1; qx = 1; qy = 1; % create a grid of units
+qz = 2; qx = 2; qy = 2; % create a grid of units
 
 [N,C_b,C_s] = vUnit_array3D(p,qz,qx,qy,N_unit,C_b_unit,C_s_unit,dis_unit);
 tenseg_plot(N,C_b,C_s);
@@ -42,6 +42,4 @@ C=[C_b;C_s]; % combined connectivity matrix
 [Ia,Ib,a,b] = tenseg_boundary(index_pinned,index_pinned,index_pinned,n_nodes);
 
 %% Grouping all top strings
-S = N*C_s'; % string matrix
-S_horizontal = S(:,find(S(3,:) == 0)); % group of all string that are horizontal
-
+N
