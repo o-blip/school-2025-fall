@@ -1,4 +1,4 @@
-function [fig_out] = tenseg_plot( N,C_b,C_s,fig_handle,highlight_nodes,view_vec, PlotTitle, R3Ddata)
+function [fig_out] = tenseg_plot( N,C_b,C_s,fig_handle,color,highlight_nodes,view_vec, PlotTitle, R3Ddata)
 % The source code is from the following link:
 % https://github.com/ramaniitrgoyal92/Modeling_of_Tensegrity_Structures_MOTES/blob/master/Function_Library/tenseg_plot.m%
 % /* This Source Code Form is subject to the terms of the Mozilla Public
@@ -50,17 +50,17 @@ FractionDistance = 0.005; % Distance between object and label (relative to overa
 %% 3D plot options
 nsurfpatches = 6; % Number of surface patches in 3D plots
 BarSurfColor = [0.2, 0.2, 0.6];
-StringSurfColor = [0.9, 0.1, 0.1];
+StringSurfColor = color;
 LightAmbientStrength = 0.7;% [0,1], 0.3 is Matlab's default
 
 %%
 switch nargin
+    case 6
+        view_vec = [];
     case 5
         view_vec = [];
-    case 4
-        view_vec = [];
         highlight_nodes = [];
-    case 3
+    case 4
         view_vec = [];
         highlight_nodes = [];
         fig_handle = [];
@@ -180,7 +180,7 @@ if ~isempty(C_s)
             hold on
         end
     else % Normal line plot
-        quiver3(string_start_nodes(1,:),string_start_nodes(2,:),string_start_nodes(3,:),S(1,:),S(2,:),S(3,:),'red.','Autoscale','off','LineWidth',StringWidth);
+        quiver3(string_start_nodes(1,:),string_start_nodes(2,:),string_start_nodes(3,:),S(1,:),S(2,:),S(3,:),'Color',color,'showarrowhead','off','Autoscale','off','LineWidth',StringWidth);
         hold on
     end
 

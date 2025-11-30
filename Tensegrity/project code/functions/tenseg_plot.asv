@@ -50,7 +50,7 @@ FractionDistance = 0.005; % Distance between object and label (relative to overa
 %% 3D plot options
 nsurfpatches = 6; % Number of surface patches in 3D plots
 BarSurfColor = [0.2, 0.2, 0.6];
-StringSurfColor = [0.9, 0.1, 0.9];
+StringSurfColor = [0.9, 0.1, 0.1];
 LightAmbientStrength = 0.7;% [0,1], 0.3 is Matlab's default
 
 %%
@@ -180,7 +180,7 @@ if ~isempty(C_s)
             hold on
         end
     else % Normal line plot
-        quiver3(string_start_nodes(1,:),string_start_nodes(2,:),string_start_nodes(3,:),S(1,:),S(2,:),S(3,:),'cyan','Autoscale','off','LineWidth',StringWidth);
+        quiver3(string_start_nodes(1,:),string_start_nodes(2,:),string_start_nodes(3,:),S(1,:),S(2,:),S(3,:),'red.','Autoscale','off','LineWidth',StringWidth);
         hold on
     end
     
@@ -209,7 +209,6 @@ if ~isempty(R3Ddata) && isfield(R3Ddata,'Nradius') % 3D plot
     end
 else % Normal plot
     plot3(N(1,:),N(2,:),N(3,:),'black.','MarkerSize',NodeSize)
-    hold on
 end
 
 % Write node labels
@@ -224,7 +223,6 @@ end
 for j=1:numel(highlight_nodes)
     node_index = highlight_nodes(j);
     plot3(N(1,node_index),N(2,node_index),N(3,node_index),'rd','MarkerSize',8,'MarkerFaceColor','red')
-    hold on
 end
 
 % Modify plot display
@@ -242,7 +240,7 @@ zlabel('z')
 title(PlotTitle)
 set(gca,'fontsize', 15,'linewidth',1.15)
 set(gca,'ticklength',1.2*get(gca,'ticklength'))
-hold on
+
 if ~isempty(R3Ddata) % 3D object changes
     camlight('headlight');
     camproj('perspective');
