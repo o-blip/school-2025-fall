@@ -3,7 +3,7 @@ function [N,C_b,C_s] = vUnit_array(p,q,N,C_b,C_s,dis)
 % connectivity; dis: distance unit off -vector 3*1;
 
 %
-numberN_unit = size(N,2);
+numberN_unit = size(N,2);  % number of nodes per unit
 [N,C_b,C_s] = tenseg_linea_array(N(:,numberN_unit),N(:,numberN_unit)+(q-1)*dis,q-1,'Evenly_Spacing',N,C_b,C_s,numberN_unit);
 
 RotM = Rodrigues([0 0 1]',pi/p);

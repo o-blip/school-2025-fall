@@ -1,6 +1,5 @@
 function C_b_in = bar_connectivity(p)
 %% function to get the bar connectivity of the unit
-% Also returns the bar groups: inner polygons and outer bars
 
 % inner polygon edges are bars
 bot_inner = [];

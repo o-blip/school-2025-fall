@@ -8,13 +8,14 @@ clear all; close all; clc;
 %% Unit Geometry
 p = 6; % polygon side number
 % polygon parameters
-r = 10; 
+R = 10; 
+r = sqrt(3)*R/2; % inradius of a hexagon
 h = 10;
 h_ratio = 0.4;
 r_ratio = 0.4;
 
 %% Generate nodes and connectivity for unit
-N_unit = generate_N(p,r,h,r_ratio,h_ratio);
+N_unit = generate_N(p,R,h,r_ratio,h_ratio);
 n_N = length(N_unit(1,:)); % number of nodes
 unit_height = h*(2-h_ratio);
 % Bar connectivity index
@@ -28,12 +29,11 @@ C_s_unit = tenseg_ind2C(C_s_in,N_unit);
 C_unit = [C_b_unit;C_s_unit];
 
 %% Creating a base of repeated units
-dis_unit = [2*r 2*r 2*h-h_ratio*h]';  % unit off distance
-qz = 1; qx = 2; qy = 2; % create a grid of units
+qx = 2; qy = 2; % create a grid of units
 
-[N,C_b,C_s] = vUnit_array3D(p,qz,qx,qy,N_unit,C_b_unit,C_s_unit,dis_unit);
+[N,C_b,C_s] = hex_array(N_unit,C_b_unit,C_s_unit,qy,R);
+[N,C_b,C_s] = hex_xarray(N,C_b,C_s,qx,R);
 tenseg_plot(N,C_b,C_s);
-n_N = size(N,2);
 
 %% Finding pinned and free nodes: pinned nodes on ground
 index_pinned = find((N(3,:) - 0.1) < 0);
@@ -67,7 +67,7 @@ legend("", lbl(1), "", "", lbl(2),"", "", lbl(3),"", "", lbl(4),"", "", ...
 %% Equilibrium analysis
 weight_habitat = 1000; % 1 ton weight
 g_moon = 1.62; % moon gravity
-top_nodes = find(N(3,:)==unit_height);
+top_nodes = find(abs(N(3,:)-unit_height)<0.1); % top nodes are nodes within 0.1 of the unit-height
 w_weight = weight_habitat/size(top_nodes,2); % force due to habitat on each top node
 
 w_external = zeros(3*n_N,1); 
