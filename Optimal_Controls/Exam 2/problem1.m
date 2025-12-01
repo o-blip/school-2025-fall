@@ -1,6 +1,7 @@
+%% Problem 1: Scalar Continuous Linear Quadratic Tracker
+% Follows Table 4.1-1 in Optimal Control by Lewis, Vrabie, Syrmos
+% More specifically Example 4.1-1: Scalar LQ Tracker
 clear all; close all; clc
-
-%% problem 1
 
 a = 1; b=1; p=10; q=5; r=2;
 T = 15;
@@ -45,7 +46,7 @@ title('State Trajectory with x(0) = 3')
 hold on
 plot(t_ref,r_ref,formatSpec{:})
 grid on
-legend('x(t)','reference')
+legend('x(t)','reference',Location="northwest")
 
 subplot(2,1,2)
 plot(t,u,formatSpec{:})
@@ -53,7 +54,7 @@ xlabel('Time (s)')
 title('Control Signal')
 grid on
 
-sgtitle('System with a=1 b=1 p=10 q=5 R=2')
+sgtitle('Problem 1A: Tracking Problem q = 50')
 
 
 %% part b- reference = sin(t) + cos(2t)
@@ -93,7 +94,7 @@ xlabel('Time (s)')
 title('Control Signal')
 grid on
 
-sgtitle('System with a=1 b=1 p=10 q=5 R=2')
+sgtitle('Problem 1B: Sinusoidal Tracking q = 50')
 
 
 %% Helper functions
