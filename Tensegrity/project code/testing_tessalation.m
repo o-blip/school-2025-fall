@@ -50,10 +50,11 @@ qz = 1; qx = 2; qy = 2; % create a grid of units
 % end
 [N,C_b,C_s] = hex_array(N_unit,C_b_unit,C_s_unit,qy,R);
 [N,C_b,C_s] = hex_xarray(N,C_b,C_s,qx,R);
+[N,C_b,C_s] = tenseg_delete_dup(N,C_b,C_s);
 tenseg_plot(N,C_b,C_s);
 
-[N_new,C_b_new,C_s_new] = delete_dupeN(N,C_b, C_s,5);
-tenseg_plot(N_new,C_b_new,C_s_new,[],1)
+% [N_new,C_b_new,C_s_new] = delete_dupeN(N,C_b, C_s,5);
+% tenseg_plot(N_new,C_b_new,C_s_new,[],1)
 % %% Finding pinned and free nodes: pinned nodes on ground
 % index_pinned = find((N(3,:) - 0.1) < 0);
 % C=[C_b;C_s]; % combined connectivity matrix

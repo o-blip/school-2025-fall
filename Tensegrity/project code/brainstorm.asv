@@ -118,11 +118,11 @@ t_all = lsqlin(G_free,w_free,[],[],[],[],compression,tension); % forces in each 
 % Bar/string stiffness
 k_bars = E_bars * A_bars ./ L_B;
 k_strings = E_strings * A_strings ./ L_S;
-K_members = diag([k_bars,k_strings]); % combine into structure stiffness
+K = diag([k_bars,k_strings]); % combine into structure stiffness
 
 
 % Free nodes previously identified
-delta_X_free = ((G_free * K_members * G_free')^-1)* w_free;
+delta_X_free = ((G_free * K * G_free')^-1)* w_free;
 
 % Map back to nodes
 N_new = N;
@@ -130,8 +130,10 @@ for i = 1:length(free_nodes)
     idx = free_nodes(i);
     N_new(:, idx) = N(:, idx) + delta_X_free(3*i-2:3*i);
 end
-tenseg_plot(N,C_b,C_s)
-tenseg_plot(N_new,C_b,C_s)
+fig2 = figure;
+tenseg_plot(N,C_b,C_s,fig2)
+hold on
+tenseg_plot(N_new,C_b,C_s,fig2)
 
 %% quake response
 % M*ddn + Kn + D*dn = F_ext
@@ -145,26 +147,26 @@ tenseg_plot(N_new,C_b,C_s)
 node_mass = 5; % 5kg e.g.
 n_free = length(free_nodes);
 M = node_mass*eye(3*n_free);
-D = zeros(3*n_free); % undamped response
-K_nodes = G_free*K_members*G_free';
+D = zeros(size(K)); % undamped response
+
 quake_data = readmatrix('waveform.csv');
 quake_data(:,2) = quake_data(:,2)*10^10;
 
-% X_0 = zeros(6*n_free,1);
-% t_vec = 0:200;
-% [t_out, N_out] = ode45(@(t,X) tenseg_dynamics(t,X,M,D,K_nodes,n_free,quake_data), t_vec, X_0);
-% 
-% 
-% function dNdt = tenseg_dynamics(t,X,M,D,K,n_free,quake_data)
-% position = X(1:3*n_free);
-% velocity = X(3*n_free+1:end);
-% 
-% t_quake = quake_data(:,1);
-% a_quake = [quake_data(:,2), zeros(size(quake_data(:,2))),zeros(size(quake_data(:,2)))];
-% a_interp = interp1(t_quake,a_quake,t)';
-% F = -M*repmat(a_interp,n_free,1); % forces on free nodes
-% 
-% accel = M\(F-D*velocity-K*position);
-% dNdt = [velocity;accel];
-% 
-% end
+X_0 = zeros(6*n_free,1);
+
+[t_out, N_out] = ode45(@[t,X] tenseg_dynamics,quake_data(:,1))
+
+
+function dNdt = tenseg_dynamics(t,X,M,C,K,n_free,quake_data)
+position = X(1:3*n_free);
+velocity = X(3*n_free+1:end);
+
+t_quake = quake_data(:,1);
+a_quake = [quake_data(:,2), zeros(size(quake_data(:,2))),zeros(size(quake_data(:,2)))];
+a_interp = interp1(t_quake,a_quake,t)';
+F = -M*repmat(a_interp,n_free,1); % forces on free nodes
+
+accel = M\(F-C*velocity-K*position);
+dNdt = [velocity;accel];
+
+end
