@@ -53,21 +53,21 @@ colors = [
     0.0000    0.5020    0.0000;   % Deep Green
     0.8000    0.0000    0.0000;   % Crimson Red
 ];
-fig = figure;
-for i =1:6
-    tenseg_plot2(N,C_b,string_grps{i},fig,colors(i,:))
-end
-G = tenseg_str_gp(string_grps,C);
-% % plot only a unit
-% string_grps_unit = group_strings(N_unit,C_s_unit,h,h_ratio);
 % fig = figure;
-% lbl = ["Group 1", "Group 2", "Group 3", "Group 4", "Group 5", "Group 6"];
 % for i =1:6
-%     tenseg_plot2(N_unit,C_b_unit,string_grps_unit{i},fig,colors(i,:))
-% 
+%     tenseg_plot2(N,C_b,string_grps{i},fig,colors(i,:))
 % end
-% legend("", lbl(1), "", "", lbl(2),"", "", lbl(3),"", "", lbl(4),"", "", ...
-%     lbl(5),"", "", lbl(6),"")
+% G = tenseg_str_gp(string_grps,C);
+% plot only a unit
+string_grps_unit = group_strings(N_unit,C_s_unit,h,h_ratio);
+fig = figure;
+lbl = ["Group 1", "Group 2", "Group 3", "Group 4", "Group 5", "Group 6"];
+for i =1:6
+    tenseg_plot2(N_unit,C_b_unit,string_grps_unit{i},fig,colors(i,:))
+
+end
+legend("", lbl(1), "", "", lbl(2),"", "", lbl(3),"", "", lbl(4),"", "", ...
+    lbl(5),"", "", lbl(6),"")
 
 %% Equilibrium analysis
 n_N = size(N,2); % update number of nodes without duplicates
