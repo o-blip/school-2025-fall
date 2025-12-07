@@ -30,7 +30,7 @@ C_s_in = string_connectivity(p);
 C_s_unit = tenseg_ind2C(C_s_in,N_unit);
 
 C_unit = [C_b_unit;C_s_unit];
-
+tenseg_plot(N_unit,C_b_unit,C_s_unit)
 %% Creating a base of repeated units
 qx = 2; qy = 2; % create a grid of units
 
@@ -66,17 +66,20 @@ end
 n_N = size(N,2); % update number of nodes without duplicates
 weight_habitat = 100000; % 1 ton weight
 g_moon = 1.62; % moon gravity
-top_nodes = find(abs(N(3,:)-unit_height)<0.1); % top nodes are nodes within 0.1 of the unit-height
-w_weight = weight_habitat*g_moon/size(top_nodes,2); % force due to habitat on each top node
+top_nodes = find(abs(N(3,:)-unit_height)<0.1); % top nodes are nodes within
+% 0.1 of the unit-height
+w_weight = weight_habitat*g_moon/size(top_nodes,2); % force due to habitat 
+% on each top node
 
 w_external = zeros(n_N,3); 
-w_external(top_nodes,3) = -w_weight; % force at each top node in negative z-direction
+w_external(top_nodes,3) = -w_weight; % force at each top node in negative
+% z-direction
 w_external = reshape(w_external',n_N*3,1); % turn force matrix into vector
 
 %% Members
 B = N*C_b';
 L_B = vecnorm(B,2,1); % gets the relaxed length of each bar
-H_B = B./L_B; % unit direction of bars
+H_B = B./L_B; % unit  direction of bars
 S = N*C_s';
 L_S = vecnorm(S,2,1); % gets the relaxed length of each string
 H_S = S./L_S; % unit direction of strings

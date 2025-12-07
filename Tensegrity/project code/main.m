@@ -8,9 +8,9 @@ clear all; close all; clc;
 %% Unit Geometry
 p = 6; % polygon side number
 % polygon parameters
-R = 10; 
+R = 1; 
 r = sqrt(3)*R/2; % inradius of a hexagon
-h = 10;
+h = 1;
 h_ratio = 0.4;
 r_ratio = 0.4;
 
@@ -29,11 +29,12 @@ C_s_unit = tenseg_ind2C(C_s_in,N_unit);
 C_unit = [C_b_unit;C_s_unit];
 
 %% Creating a base of repeated units
-qx = 2; qy = 2; % create a grid of units
+qx = 4; qy = 4; % create a grid of units
 
 [N,C_b,C_s] = hex_array(N_unit,C_b_unit,C_s_unit,qy,R);
+% tenseg_plot(N,C_b,C_s)
 [N,C_b,C_s] = hex_xarray(N,C_b,C_s,qx,R);
-[N,C_b,C_s] = tenseg_delete_dup(N,C_b,C_s); % delete repeated nodes and fix connectivity
+% [N,C_b,C_s] = tenseg_delete_dup(N,C_b,C_s); % delete repeated nodes and fix connectivity
 tenseg_plot(N,C_b,C_s);
 
 %% Finding pinned and free nodes: pinned nodes on ground
@@ -53,10 +54,10 @@ colors = [
     0.0000    0.5020    0.0000;   % Deep Green
     0.8000    0.0000    0.0000;   % Crimson Red
 ];
-% fig = figure;
-% for i =1:6
-%     tenseg_plot2(N,C_b,string_grps{i},fig,colors(i,:))
-% end
+fig = figure;
+for i =1:6
+    tenseg_plot2(N,C_b,string_grps{i},fig,colors(i,:))
+end
 % G = tenseg_str_gp(string_grps,C);
 % plot only a unit
 string_grps_unit = group_strings(N_unit,C_s_unit,h,h_ratio);
