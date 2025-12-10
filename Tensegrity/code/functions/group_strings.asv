@@ -70,6 +70,6 @@ bot2bot = tenseg_ind2C(bot2bot_in,N);
 top2top= tenseg_ind2C(top2top_in,N);
 inner2inner = tenseg_ind2C(inner2inner_in,N);
 string_grp = {top_str, bot_str,t2b_outer,bot2bot,top2top,inner2inner};
-% string_grp = {top_str};
+
 
 end

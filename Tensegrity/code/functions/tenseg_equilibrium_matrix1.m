@@ -16,7 +16,7 @@ function [A_1a,A_1ag,A_2a,A_2ag,l,l_gp]=tenseg_equilibrium_matrix1(N,C,Gp,Ia)
 %	A_1ag: Equilirium matrix with boundary, group constraints, force
 %	density as variable.
 %	A_2a: equilibrium matrix with constraints, force as variable
-%	A_2ag: Equilirium matrix with boundary, group constraints, force
+%	A_1ag: Equilirium matrix with boundary, group constraints, force
 %   l: members' length vector
 %   l_gp: members' length vector in group
 %	as variable.

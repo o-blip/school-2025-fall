@@ -64,7 +64,7 @@ end
 
 %% Equilibrium analysis
 n_N = size(N,2); % update number of nodes without duplicates
-weight_habitat = 100000; % 1 ton weight
+weight_habitat = 10000; % weight of top load
 g_moon = 1.62; % moon gravity
 top_nodes = find(abs(N(3,:)-unit_height)<0.1); % top nodes are nodes within
 % 0.1 of the unit-height
