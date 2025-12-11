@@ -36,4 +36,5 @@ y_coor = y_ind(x_ind);
 min_omega = omega(x_ind)*180/pi;
 min_psi = psi(y_coor)*180/pi;
 
+fprintf('The minimum mass is %.2f with omega = %.2f and psi = %.2f',min_m,min_omega,min_psi)
 %% Design 2

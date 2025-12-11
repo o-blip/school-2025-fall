@@ -1,6 +1,30 @@
-%% Recreation of polygon unit from professor
-clear all; close all; clc;
+%% Code for a hexagonal tensegrity foundation
+% Used/modified code from:
+%   https://github.com/Muhao-Chen/Tensegrity_Finite_Element_Method_TsgFEM
+%   DOI: https://doi.org/10.21105/joss.03390
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Note for professor %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Main issues I'm having is in the prestress design, I believe everything 
+% before that section is ok in the code. 
+% 
+% % What I've tried
+% - I have tried following the same steps used to get the prestress design of
+% in the 3D D-bar example in the statics example folder, but I got confused
+% in using the tenseg_prestress_design with my structure. I assume we want
+% a prestress that flattens the top face of the structure under whatever
+% mass is sitting on top. I'm thinking maybe the way I grouped my strings
+% makes it impossible to control the structure under the weight
+% 
+% - I was also playing with the dynamics and trying to work out how to
+% model the effects of the ground motion on the free nodes. I saw there are
+% some functions specifically for seismic simulation but I had some trouble
+% following how they work and how to apply it to the my structure
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+clear all; close all; clc;
+addpath('functions\')
 %% Material properties: Aluminum 2024 for bars, Steel cables
 E_bars = 73*10^9; % Pascals
 E_strings = 200*10^6; % Pa
@@ -36,7 +60,13 @@ qx = 2; qy = 2; % create a grid of units
 [N,C_b,C_s] = hex_array(N_unit,C_b_unit,C_s_unit,qy,R);
 [N,C_b,C_s] = hex_xarray(N,C_b,C_s,qx,R);
 [N,C_b,C_s] = tenseg_delete_dup(N,C_b,C_s); % delete repeated nodes and fix connectivity
-tenseg_plot(N,C_b,C_s);
+
+% % plotting image for report/presentation
+% top_nodes = find(abs(N(3,:)-unit_height)<0.1); % top nodes are nodes within 0.1 of the unit-height
+% N_top = N(:,top_nodes);
+% 
+% tenseg_plot(N,C_b,C_s);
+
 
 %% Finding pinned and free nodes: pinned nodes on ground
 index_pinned = find((N(3,:) - 0.1) < 0);
@@ -48,7 +78,9 @@ C=[C_b;C_s]; % combined connectivity matrix
 
 %% Grouping top and bottom strings
 string_grps = group_strings(N,C_s,h,h_ratio);
-% plotting each string group in different colors
+
+
+% Plotting the groups on a single unit
 colors = [
     0.0000    0.4471    0.7412;   % Electric Blue
     0.8510    0.3255    0.0980;   % Vivid Orange
@@ -57,28 +89,29 @@ colors = [
     0.0000    0.5020    0.0000;   % Deep Green
     0.8000    0.0000    0.0000;   % Crimson Red
 ];
-
-% Plotting the groups on a single unit
 string_grps_unit = group_strings(N_unit,C_s_unit,h,h_ratio);
-fig = figure;
 
-% tenseg_plot2(N,C_b,string_grps{1},fig,colors(1,:))
 % plot only a unit
 string_grps_unit = group_strings(N_unit,C_s_unit,h,h_ratio);
 fig = figure;
-lbl = ["Group 1", "Group 2", "Group 3", "Group 4", "Group 5", "Group 6"];
-for i =1:6
-    tenseg_plot2(N_unit,C_b_unit,string_grps_unit{i},fig,colors(i,:))
 
+for i =1:6
+    ax_handle = subplot(2,3,i);
+    tenseg_plot2(N_unit,C_b_unit,string_grps_unit{i},ax_handle,fig,colors(i,:))
+    title(sprintf('Group %d',i))
 end
-legend("", lbl(1), "", "", lbl(2),"", "", lbl(3),"", "", lbl(4),"", "", ...
-    lbl(5),"", "", lbl(6),"")
+
+
+% lbl = ["Group 1", "Group 2", "Group 3", "Group 4", "Group 5", "Group 6"];
+% legend("", lbl(1), "", "", lbl(2),"", "", lbl(3),"", "", lbl(4),"", "", ...
+%     lbl(5),"", "", lbl(6),"")
+
 
 
 %% Equilibrium analysis
 % Weight of top structure
 n_N = size(N,2); % update number of nodes without duplicates
-weight_habitat = 10000; % 1 ton weight
+weight_habitat = 50000; % 1 ton weight
 g_moon = 1.62; % moon gravity
 top_nodes = find(abs(N(3,:)-unit_height)<0.1); % top nodes are nodes within 0.1 of the unit-height
 w_weight = weight_habitat/size(top_nodes,2); % force due to habitat on each top node
@@ -130,8 +163,15 @@ u_static = inv(K)*w_external; % displacement of nodes due to weight
 u_static = Ia*u_static; % add back fixed nodes
 u_static = reshape(u_static,3,n_N);
 N_static = N+u_static;
-tenseg_plot(N_static,C_b,C_s)
 
+% plotting
+equilibrium_plot = figure;
+ax_side = subplot(2,1,1);
+tenseg_plot2(N_static,C_b,C_s,ax_side,equilibrium_plot)
+ax_top = subplot(2,1,2);
+tenseg_plot2(N_static,C_b,C_s,ax_top,equilibrium_plot)
+
+sgtitle('Foundation under a mass = 50000 kg')
 
 %% Prestressing strings
 
@@ -178,6 +218,8 @@ end
 % tenseg_plot(N_static,C_b,C_s)
 %% Dynamics
 
+
+% % accelerations at bottom nodes translated as forces on free nodes
 % node_mass = 5; % 5kg e.g.
 % n_free = length(free_nodes);
 % M = node_mass*eye(3*n_N);

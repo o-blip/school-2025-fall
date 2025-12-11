@@ -1,4 +1,4 @@
-function [fig_out] = tenseg_plot2( N,C_b,C_s,fig_handle,color,highlight_nodes,view_vec, PlotTitle, R3Ddata)
+function [fig_out] = tenseg_plot2( N,C_b,C_s,ax_handle,fig_handle,color,highlight_nodes,view_vec, PlotTitle, R3Ddata)
 % MODIFIED VERSION OF tenseg_plot, for plotting multiple string groups in 
 % different colors
 % The source code is from the following link:
@@ -57,15 +57,15 @@ LightAmbientStrength = 0.7;% [0,1], 0.3 is Matlab's default
 
 %%
 switch nargin
+    case 7
+        view_vec = [];
     case 6
         view_vec = [];
+        highlight_nodes = [];
     case 5
         view_vec = [];
         highlight_nodes = [];
-    case 4
-        view_vec = [];
-        highlight_nodes = [];
-        fig_handle = [];
+        color = 'red';
 end
 
 if nargin < 7 % Empty Plot Title
@@ -108,12 +108,19 @@ dist_y = FractionDistance * diff_y;
 dist_z = FractionDistance * diff_z;
 
 %% Open specified figure or create new one
-if isempty(fig_handle)
-    fig_out = figure;
+% If no axes provided, fall back to the original figure logic
+if isempty(ax_handle)
+    if isempty(fig_handle)
+        fig_out = figure;
+    else
+        fig_out = figure(fig_handle);
+    end
+    ax_handle = gca;    % use current axes in that figure
 else
-    fig_out = figure(fig_handle);
+    % If axes provided, use that axes
+    fig_out = ax_handle.Parent;
+    axes(ax_handle);     % make it active
 end
-
 
 %% Plot bar member vectors
 if ~isempty(C_b)
