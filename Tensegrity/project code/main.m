@@ -46,13 +46,15 @@ n_N = length(N_unit(1,:)); % number of nodes
 unit_height = h*(2-h_ratio);
 % Bar connectivity index
 C_b_in = bar_connectivity(p);
-C_b_unit = tenseg_ind2C(C_b_in,N_unit);
+N_bottom = N_unit(:,~C_b_in);
+C_b_unit = tenseg_ind2C(C_b_in,N_bottom);
 
+% tenseg_plot(N_bottom,C_b_unit,[])
 % String connectivity index
-C_s_in = string_connectivity(p);
-C_s_unit = tenseg_ind2C(C_s_in,N_unit);
+% C_s_in = string_connectivity(p);
+% C_s_unit = tenseg_ind2C(C_s_in,N_unit);
 
-C_unit = [C_b_unit;C_s_unit];
+% C_unit = [C_b_unit;C_s_unit];
 
 %% Creating a base of repeated units
 qx = 2; qy = 2; % create a grid of units

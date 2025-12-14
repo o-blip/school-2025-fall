@@ -24,5 +24,10 @@ for i = 1:p
     c_bi2to_in = [p+i 3*p+i];
     bot_i_2_top_o = [bot_i_2_top_o; c_bi2to_in];
 end
+
+% C_b_in = [top_inner; bot_o_2_top_i];
+% C_b_in = [bot_inner; bot_i_2_top_o];
+
 C_b_in = [bot_inner; top_inner; bot_o_2_top_i;bot_i_2_top_o];
+
 end
